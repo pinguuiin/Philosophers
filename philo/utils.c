@@ -6,7 +6,7 @@
 /*   By: piyu <piyu@student.hive.fi>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 00:13:31 by piyu              #+#    #+#             */
-/*   Updated: 2025/06/11 22:37:40 by piyu             ###   ########.fr       */
+/*   Updated: 2025/06/13 22:19:08 by piyu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,11 +70,11 @@ void	ft_putendl_fd(char *s, int fd)
 	write(fd, "\n", 1);
 }
 
-size_t	get_time(void)
+time_t	get_time(void)
 {
 	struct timeval	tv;
 
 	if (gettimeofday(&tv, NULL) == -1)
-		error_return("couldn't get time");
+		return (error_return("couldn't get time"));
 	return (tv.tv_sec * 1000 + tv.tv_usec / 1000);
 }

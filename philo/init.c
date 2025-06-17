@@ -6,7 +6,7 @@
 /*   By: piyu <piyu@student.hive.fi>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 01:58:20 by piyu              #+#    #+#             */
-/*   Updated: 2025/06/12 00:47:41 by piyu             ###   ########.fr       */
+/*   Updated: 2025/06/14 01:54:19 by piyu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,9 @@ int	init_data(t_data *data, int *arr)
 	data->fork_lock = malloc(data->num * sizeof(pthread_mutex_t));
 	if (!data->fork_lock)
 		return (EXIT_FAILURE);
+	data->stop_flag = 0;
+	if (pthread_mutex_init(&data->stop_flag_lock, NULL))
+		return (EXIT_FAILURE);
 	while (i < data->num)
 	{
 		data->philo[i].id = i + 1;
@@ -56,10 +59,12 @@ int	init_data(t_data *data, int *arr)
 		data->philo[i].time_eat = arr[2];
 		data->philo[i].time_sleep = arr[3];
 		data->philo[i].meals_full = arr[4];
-		data->philo[i].meals_eaten = 0;
+		if (pthread_mutex_init(&data->print_lock, NULL))
+			return (EXIT_FAILURE);
 		data->philo[i].print_lock = &data->print_lock;
 		if (pthread_mutex_init(&data->fork_lock[i], NULL))
 			return (EXIT_FAILURE);
+		data->philo[i].stop_flag = &data->stop_flag;
 		i++;
 	}
 	allocate_fork(data);

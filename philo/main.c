@@ -6,7 +6,7 @@
 /*   By: piyu <piyu@student.hive.fi>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 18:50:30 by piyu              #+#    #+#             */
-/*   Updated: 2025/06/12 03:46:25 by piyu             ###   ########.fr       */
+/*   Updated: 2025/06/14 01:01:26 by piyu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,9 @@ static int	start_process(t_data *data)
 		if (pthread_create(&data->philo[i].thread, NULL, routine, (void *)&data->philo[i]))
 			return (EXIT_FAILURE);
 		data->philo[i].start_time = t;
+		data->philo[i].last_meal = t;
+		data->philo[i].meals_eaten = 0;
+		data->philo[i].is_dead = false;
 		i++;
 	}
 	if (pthread_create(&data->monitor, NULL, watching, (void *)data))
