@@ -6,7 +6,7 @@
 /*   By: piyu <piyu@student.hive.fi>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 00:13:31 by piyu              #+#    #+#             */
-/*   Updated: 2025/06/13 22:19:08 by piyu             ###   ########.fr       */
+/*   Updated: 2025/08/01 19:39:25 by piyu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 int	error_return(char *s)
 {
 	ft_putendl_fd(s, STDERR_FILENO);
-	return(EXIT_FAILURE);
+	return (EXIT_FAILURE);
 }
 
 int	philo_atoi(char *s)

@@ -6,7 +6,7 @@
 /*   By: piyu <piyu@student.hive.fi>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 19:23:27 by piyu              #+#    #+#             */
-/*   Updated: 2025/06/14 01:53:08 by piyu             ###   ########.fr       */
+/*   Updated: 2025/08/01 22:00:33 by piyu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@
 typedef struct s_data
 {
 	int				num;
-	pthread_t		monitor;
+	// pthread_t		monitor;
 	int				stop_flag;
 	pthread_mutex_t	stop_flag_lock;
 	pthread_mutex_t	*fork_lock;
