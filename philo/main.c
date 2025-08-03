@@ -6,11 +6,23 @@
 /*   By: piyu <piyu@student.hive.fi>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 18:50:30 by piyu              #+#    #+#             */
-/*   Updated: 2025/08/01 20:27:31 by piyu             ###   ########.fr       */
+/*   Updated: 2025/08/03 04:25:41 by piyu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+int	clean_up(t_data *data)
+{
+	int	i;
+
+	i = 0;
+	conditional_clean_up(data, data->num);
+	while (i < data->num)
+	{
+		if (data->philo->has_thread)
+	}
+}
 
 static int	start_process(t_data *data)
 {
@@ -22,13 +34,13 @@ static int	start_process(t_data *data)
 	while (i < data->num)
 	{
 		if (pthread_create(&data->philo[i].thread, NULL, routine, (void *)&data->philo[i]))
-			return (EXIT_FAILURE);
+			return (clean_up(data));
+		data->philo[i].has_thread = true;
 		data->philo[i].start_time = t;
 		data->philo[i].last_meal = t;
+		pthread_join(data->philo[i].thread, NULL);
 		i++;
 	}
-	if (pthread_create(&data->monitor, NULL, watching, (void *)data))
-		return (EXIT_FAILURE);
 	return (EXIT_SUCCESS);
 }
 

@@ -6,7 +6,7 @@
 /*   By: piyu <piyu@student.hive.fi>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 19:23:27 by piyu              #+#    #+#             */
-/*   Updated: 2025/08/01 22:00:33 by piyu             ###   ########.fr       */
+/*   Updated: 2025/08/03 04:45:53 by piyu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ typedef struct s_philo
 {
 	int				id;
 	pthread_t		thread;
+	bool			has_thread;
 	int				time_die;
 	int				time_eat;
 	int				time_sleep;
@@ -56,6 +57,7 @@ int		philo_atoi(char *s);
 void	philo_putnbr(int n);
 void	ft_putendl_fd(char *s, int fd);
 time_t	get_time(void);
+int		conditional_clean_up(t_data *data, int p);
 int		init_data(t_data *data, int *arr);
 int		print_message(t_philo *philo, char *s);
 void	*routine(void *param);
