@@ -6,7 +6,7 @@
 /*   By: piyu <piyu@student.hive.fi>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 18:50:30 by piyu              #+#    #+#             */
-/*   Updated: 2025/08/03 04:25:41 by piyu             ###   ########.fr       */
+/*   Updated: 2025/08/06 01:02:44 by piyu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,13 +24,15 @@ int	clean_up(t_data *data)
 	}
 }
 
-static int	start_process(t_data *data)
+static int	create_thread(t_data *data)
 {
 	int		i;
 	size_t	t;
 
 	i = 0;
 	t = get_time();
+	if (pthread_create(&data->monitor, NULL, watching, (void *)data))
+		return (clean_up(data));
 	while (i < data->num)
 	{
 		if (pthread_create(&data->philo[i].thread, NULL, routine, (void *)&data->philo[i]))
@@ -38,7 +40,22 @@ static int	start_process(t_data *data)
 		data->philo[i].has_thread = true;
 		data->philo[i].start_time = t;
 		data->philo[i].last_meal = t;
-		pthread_join(data->philo[i].thread, NULL);
+		i++;
+	}
+	return (EXIT_SUCCESS);
+}
+
+static int	join_thread(t_data *data, int n)
+{
+	int	i;
+
+	i = 0;
+	if (pthread_join(data->monitor, NULL))
+		return (clean_up(data));
+	while (i < n)
+	{
+		if (pthread_join(data->philo[i].thread, NULL))
+			return (clean_up(data));
 		i++;
 	}
 	return (EXIT_SUCCESS);
@@ -46,8 +63,11 @@ static int	start_process(t_data *data)
 
 static int	run_philo(t_data *data)
 {
-	if (start_process(data))
+	if (create_thread(data))
 		return (EXIT_FAILURE);
+	if (join_thread(data, data->num))
+		return (EXIT_FAILURE);
+	return (EXIT_SUCCESS);
 }
 
 int	main(int argc, char **argv)

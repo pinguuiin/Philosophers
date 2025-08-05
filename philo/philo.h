@@ -6,7 +6,7 @@
 /*   By: piyu <piyu@student.hive.fi>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 19:23:27 by piyu              #+#    #+#             */
-/*   Updated: 2025/08/03 04:45:53 by piyu             ###   ########.fr       */
+/*   Updated: 2025/08/06 00:57:26 by piyu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,8 @@
 typedef struct s_data
 {
 	int				num;
-	// pthread_t		monitor;
-	int				stop_flag;
+	pthread_t		monitor;
+	_Atomic int		stop_flag;
 	pthread_mutex_t	stop_flag_lock;
 	pthread_mutex_t	*fork_lock;
 	pthread_mutex_t	print_lock;
@@ -61,5 +61,5 @@ int		conditional_clean_up(t_data *data, int p);
 int		init_data(t_data *data, int *arr);
 int		print_message(t_philo *philo, char *s);
 void	*routine(void *param);
-int		sleep_monitor(t_philo *philo, time_t ms);
+int		time_counter(t_philo *philo, time_t ms);
 #endif

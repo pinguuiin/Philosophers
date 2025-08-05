@@ -6,52 +6,51 @@
 /*   By: piyu <piyu@student.hive.fi>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/12 02:13:40 by piyu              #+#    #+#             */
-/*   Updated: 2025/06/14 00:43:53 by piyu             ###   ########.fr       */
+/*   Updated: 2025/08/04 22:46:44 by piyu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
+static void	unlock_two_forks(t_philo *philo)
+{
+	pthread_mutex_unlock(philo->l_fork);
+	pthread_mutex_unlock(philo->r_fork);
+}
+
 static int	eating(t_philo *philo)
 {
-	if (pthread_mutex_lock(philo->l_fork))
-		return (EXIT_FAILURE);
+	pthread_mutex_lock(philo->l_fork);
 	if (print_messasge(philo, "has taken a fork"))
-		return (EXIT_FAILURE);
-	if (pthread_mutex_lock(philo->r_fork))
-		return (EXIT_FAILURE);
+		return (pthread_mutex_unlock(philo->l_fork), EXIT_FAILURE);
+	pthread_mutex_lock(philo->r_fork);
 	if (print_messasge(philo, "has taken a fork"))
-		return (EXIT_FAILURE);
+		return (unlock_two_forks(philo), EXIT_FAILURE);
 	if (print_message(philo, "is eating"))
-		return (EXIT_FAILURE);
+		return (unlock_two_forks(philo), EXIT_FAILURE);
 	philo->last_meal = get_time();
-	if (sleep_monitor(philo, philo->time_eat))
-		return (EXIT_FAILURE);
+	if (time_counter(philo, philo->time_eat))
+		return (unlock_two_forks(philo), EXIT_FAILURE);
 	philo->meals_eaten++;
-	if (pthread_mutex_unlock(philo->l_fork))
-		return (EXIT_FAILURE);
-	if (pthread_mutex_unlock(philo->r_fork))
-		return (EXIT_FAILURE);
+	unlock_two_forks(philo);
 	return (EXIT_SUCCESS);
 }
 
 static int	sleeping(t_philo *philo)
 {
-	pthread_mutex_lock(philo->print_lock);
-	print_message(philo, "is sleeping");
-	pthread_mutex_unlock(philo->print_lock);
-	if (sleep_monitor(philo, philo->time_sleep))
+	if (print_message(philo, "is sleeping"))
+		return (EXIT_FAILURE);
+	if (time_counter(philo, philo->time_sleep))
 		return (EXIT_FAILURE);
 	return (EXIT_SUCCESS);
 }
 
-static int	thinking(t_philo *philo, int t)
+static int	thinking(t_philo *philo)
 {
-	pthread_mutex_lock(philo->print_lock);
-	print_message(philo, "is thinking");
-	pthread_mutex_unlock(philo->print_lock);
-	if (sleep_monitor(philo, t))
+	if (print_message(philo, "is thinking"))
 		return (EXIT_FAILURE);
+	// if (time_counter(philo, t))
+	// 	return (EXIT_FAILURE);
 	return (EXIT_SUCCESS);
 }
 
@@ -60,18 +59,19 @@ void	*routine(void *param)
 	t_philo	*philo;
 
 	philo = (t_philo *)param;
-	if (philo->id % 2 == 0)
-	{
-		if (thinking(philo, philo->time_eat))
-			return (NULL);
-	}
+	// if (philo->id % 2 == 0)
+	// {
+	// 	if (thinking(philo, philo->time_eat))
+	// 		return (NULL);
+	// }
 	while (*philo->stop_flag == 0)
 	{
 		if (eating(philo))
-			return (NULL);
+			break ;
 		if (sleeping(philo))
-			return (NULL);
-		if (thinking(philo, t))
-			return (NULL);
+			break ;
+		if (thinking(philo))
+			break ;
 	}
+	return (NULL);
 }
