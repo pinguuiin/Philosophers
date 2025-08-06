@@ -6,7 +6,7 @@
 /*   By: piyu <piyu@student.hive.fi>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 00:18:06 by piyu              #+#    #+#             */
-/*   Updated: 2025/08/05 00:18:55 by piyu             ###   ########.fr       */
+/*   Updated: 2025/08/06 17:37:05 by piyu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ int	time_counter(t_philo *philo, time_t t_ms)
 				return (EXIT_FAILURE);
 			return (EXIT_FAILURE);
 		}
-		usleep(1000);
+		usleep(500);
 		now += 1;
 	}
 	return (EXIT_SUCCESS);

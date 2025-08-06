@@ -6,7 +6,7 @@
 /*   By: piyu <piyu@student.hive.fi>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 19:23:27 by piyu              #+#    #+#             */
-/*   Updated: 2025/08/06 00:57:26 by piyu             ###   ########.fr       */
+/*   Updated: 2025/08/06 18:01:35 by piyu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@
 typedef struct s_data
 {
 	int				num;
+	int				start_flag;
+	pthread_mutex_t	start_flag_lock;
 	pthread_t		monitor;
 	_Atomic int		stop_flag;
 	pthread_mutex_t	stop_flag_lock;
@@ -37,7 +39,6 @@ typedef struct s_philo
 {
 	int				id;
 	pthread_t		thread;
-	bool			has_thread;
 	int				time_die;
 	int				time_eat;
 	int				time_sleep;
@@ -50,6 +51,7 @@ typedef struct s_philo
 	pthread_mutex_t	*print_lock;
 	bool			is_dead;
 	int				*stop_flag;
+	int				*start_flag;
 }	t_philo;
 
 int		error_return(char *s);

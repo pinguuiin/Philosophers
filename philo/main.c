@@ -6,7 +6,7 @@
 /*   By: piyu <piyu@student.hive.fi>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 18:50:30 by piyu              #+#    #+#             */
-/*   Updated: 2025/08/06 01:02:44 by piyu             ###   ########.fr       */
+/*   Updated: 2025/08/06 17:54:56 by piyu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,11 +37,11 @@ static int	create_thread(t_data *data)
 	{
 		if (pthread_create(&data->philo[i].thread, NULL, routine, (void *)&data->philo[i]))
 			return (clean_up(data));
-		data->philo[i].has_thread = true;
 		data->philo[i].start_time = t;
 		data->philo[i].last_meal = t;
 		i++;
 	}
+	data->start_flag = 1;
 	return (EXIT_SUCCESS);
 }
 

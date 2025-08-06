@@ -6,7 +6,7 @@
 /*   By: piyu <piyu@student.hive.fi>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/12 02:13:40 by piyu              #+#    #+#             */
-/*   Updated: 2025/08/04 22:46:44 by piyu             ###   ########.fr       */
+/*   Updated: 2025/08/06 17:36:50 by piyu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,8 @@ void	*routine(void *param)
 	t_philo	*philo;
 
 	philo = (t_philo *)param;
+	while (philo->start_flag == 0)
+		usleep(500);
 	// if (philo->id % 2 == 0)
 	// {
 	// 	if (thinking(philo, philo->time_eat))
