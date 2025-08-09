@@ -6,17 +6,11 @@
 /*   By: piyu <piyu@student.hive.fi>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 00:13:31 by piyu              #+#    #+#             */
-/*   Updated: 2025/08/05 00:18:19 by piyu             ###   ########.fr       */
+/*   Updated: 2025/08/09 01:51:25 by piyu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
-int	error_return(char *s)
-{
-	ft_putendl_fd(s, STDERR_FILENO);
-	return (EXIT_FAILURE);
-}
 
 int	philo_atoi(char *s)
 {
@@ -45,22 +39,6 @@ int	philo_atoi(char *s)
 	return ((int)n);
 }
 
-void	philo_putnbr(int n)
-{
-	char	c;
-
-	if (n > 9)
-	{
-		philo_putnbr(n / 10);
-		philo_putnbr(n % 10);
-	}
-	if (n <= 9)
-	{
-		c = n + '0';
-		write(STDOUT_FILENO, &c, 1);
-	}
-}
-
 void	ft_putendl_fd(char *s, int fd)
 {
 	int	i;
@@ -68,4 +46,10 @@ void	ft_putendl_fd(char *s, int fd)
 	while (s[i])
 		write(fd, &s[i++], 1);
 	write(fd, "\n", 1);
+}
+
+int	error_return(char *s)
+{
+	ft_putendl_fd(s, STDERR_FILENO);
+	return (EXIT_FAILURE);
 }

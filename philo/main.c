@@ -6,22 +6,27 @@
 /*   By: piyu <piyu@student.hive.fi>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 18:50:30 by piyu              #+#    #+#             */
-/*   Updated: 2025/08/06 17:54:56 by piyu             ###   ########.fr       */
+/*   Updated: 2025/08/09 04:12:07 by piyu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	clean_up(t_data *data)
+int	join_and_clean_up(t_data *data, int n)
 {
 	int	i;
 
 	i = 0;
+	pthread_mutex_lock(&data->philo[0].dead_lock);
+	data->philo[0].is_dead = true;
+	pthread_mutex_unlock(&data->philo[0].dead_lock);
 	conditional_clean_up(data, data->num);
-	while (i < data->num)
-	{
-		if (data->philo->has_thread)
-	}
+	if (n == -1)
+		return (EXIT_FAILURE);
+	pthread_join(data->monitor, NULL);
+	while (i < n)
+		pthread_join(data->philo[i++].thread, NULL);
+	return (EXIT_FAILURE);
 }
 
 static int	create_thread(t_data *data)
@@ -32,30 +37,31 @@ static int	create_thread(t_data *data)
 	i = 0;
 	t = get_time();
 	if (pthread_create(&data->monitor, NULL, watching, (void *)data))
-		return (clean_up(data));
+		return (join_and_clean_up(data, -1));
 	while (i < data->num)
 	{
-		if (pthread_create(&data->philo[i].thread, NULL, routine, (void *)&data->philo[i]))
-			return (clean_up(data));
-		data->philo[i].start_time = t;
-		data->philo[i].last_meal = t;
+		if (pthread_create(&data->philo[i].thread, NULL, routine,
+		(void *)&data->philo[i]))
+			return (join_and_clean_up(data, i));
 		i++;
 	}
-	data->start_flag = 1;
+	pthread_mutex_lock(&data->start_lock);
+	data->start_flag = true;
+	pthread_mutex_unlock(&data->start_lock);
 	return (EXIT_SUCCESS);
 }
 
-static int	join_thread(t_data *data, int n)
+static int	join_thread(t_data *data)
 {
 	int	i;
 
 	i = 0;
 	if (pthread_join(data->monitor, NULL))
-		return (clean_up(data));
-	while (i < n)
+		return (conditional_clean_up(data, data->num));
+	while (i < data->num)
 	{
 		if (pthread_join(data->philo[i].thread, NULL))
-			return (clean_up(data));
+			return (conditional_clean_up(data, data->num));
 		i++;
 	}
 	return (EXIT_SUCCESS);
@@ -65,7 +71,7 @@ static int	run_philo(t_data *data)
 {
 	if (create_thread(data))
 		return (EXIT_FAILURE);
-	if (join_thread(data, data->num))
+	if (join_thread(data))
 		return (EXIT_FAILURE);
 	return (EXIT_SUCCESS);
 }

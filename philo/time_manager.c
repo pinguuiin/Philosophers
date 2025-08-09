@@ -6,11 +6,23 @@
 /*   By: piyu <piyu@student.hive.fi>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 00:18:06 by piyu              #+#    #+#             */
-/*   Updated: 2025/08/06 17:37:05 by piyu             ###   ########.fr       */
+/*   Updated: 2025/08/09 04:58:51 by piyu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+void	starve_to_die(t_philo *philo)
+{
+	pthread_mutex_lock(&philo->dead_lock);
+	philo->is_dead = true;
+	pthread_mutex_unlock(&philo->dead_lock);
+	pthread_mutex_lock(philo->print_lock);
+	printf("%zu %d %s\n", get_time() - philo->start_time,
+	philo->id, "died");
+	usleep(500);
+	pthread_mutex_unlock(philo->print_lock);
+}
 
 time_t	get_time(void)
 {
@@ -30,16 +42,11 @@ int	time_counter(t_philo *philo, time_t t_ms)
 	end = now + t_ms;
 	while (now < end)
 	{
-		if (*philo->stop_flag == 1)
+		if (dead_check(philo) == true)
 			return (EXIT_FAILURE);
 		if (now - philo->last_meal > philo->time_die)
-		{
-			philo->is_dead = true;
-			if (print_message(philo, "is dead"))
-				return (EXIT_FAILURE);
-			return (EXIT_FAILURE);
-		}
-		usleep(500);
+			return (starve_to_die(philo), EXIT_FAILURE);
+		usleep(1000);
 		now += 1;
 	}
 	return (EXIT_SUCCESS);

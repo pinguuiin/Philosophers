@@ -6,7 +6,7 @@
 /*   By: piyu <piyu@student.hive.fi>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/12 02:13:40 by piyu              #+#    #+#             */
-/*   Updated: 2025/08/06 17:36:50 by piyu             ###   ########.fr       */
+/*   Updated: 2025/08/09 05:42:04 by piyu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,14 +59,25 @@ void	*routine(void *param)
 	t_philo	*philo;
 
 	philo = (t_philo *)param;
-	while (philo->start_flag == 0)
+	while (1)
+	{
+		if (dead_check(philo) == true)
+			return (NULL);
+		pthread_mutex_lock(philo->start_lock);
+		if (philo->start_flag == true)
+			break ;
+		pthread_mutex_unlock(philo->start_lock);
 		usleep(500);
+	}
+	pthread_mutex_unlock(philo->start_lock);
+	philo->start_time = get_time();
+	philo->last_meal = philo->start_time;
 	// if (philo->id % 2 == 0)
 	// {
 	// 	if (thinking(philo, philo->time_eat))
 	// 		return (NULL);
 	// }
-	while (*philo->stop_flag == 0)
+	while (1)
 	{
 		if (eating(philo))
 			break ;
