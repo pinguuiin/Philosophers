@@ -6,7 +6,7 @@
 /*   By: piyu <piyu@student.hive.fi>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/12 02:13:40 by piyu              #+#    #+#             */
-/*   Updated: 2025/08/09 05:42:04 by piyu             ###   ########.fr       */
+/*   Updated: 2025/08/12 04:51:54 by piyu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,11 +28,15 @@ static int	eating(t_philo *philo)
 		return (unlock_two_forks(philo), EXIT_FAILURE);
 	if (print_message(philo, "is eating"))
 		return (unlock_two_forks(philo), EXIT_FAILURE);
+	pthread_mutex_lock(&philo->philo_lock);
 	philo->last_meal = get_time();
+	pthread_mutex_unlock(&philo->philo_lock);
 	if (time_counter(philo, philo->time_eat))
 		return (unlock_two_forks(philo), EXIT_FAILURE);
-	philo->meals_eaten++;
 	unlock_two_forks(philo);
+	pthread_mutex_lock(&philo->philo_lock);
+	philo->meals_eaten++;
+	pthread_mutex_unlock(&philo->philo_lock);
 	return (EXIT_SUCCESS);
 }
 
@@ -49,8 +53,6 @@ static int	thinking(t_philo *philo)
 {
 	if (print_message(philo, "is thinking"))
 		return (EXIT_FAILURE);
-	// if (time_counter(philo, t))
-	// 	return (EXIT_FAILURE);
 	return (EXIT_SUCCESS);
 }
 
@@ -63,24 +65,27 @@ void	*routine(void *param)
 	{
 		if (dead_check(philo) == true)
 			return (NULL);
-		pthread_mutex_lock(philo->start_lock);
+		pthread_mutex_lock(&philo->philo_lock);
 		if (philo->start_flag == true)
 			break ;
-		pthread_mutex_unlock(philo->start_lock);
+		pthread_mutex_unlock(&philo->philo_lock);
 		usleep(500);
 	}
-	pthread_mutex_unlock(philo->start_lock);
 	philo->start_time = get_time();
 	philo->last_meal = philo->start_time;
-	// if (philo->id % 2 == 0)
-	// {
-	// 	if (thinking(philo, philo->time_eat))
-	// 		return (NULL);
-	// }
+	pthread_mutex_unlock(&philo->philo_lock);
+	if (thinking(philo))
+		return (NULL);
+	if (philo->id % 2 == 0)
+		usleep(philo->time_eat * 1000);
 	while (1)
 	{
 		if (eating(philo))
 			break ;
+		pthread_mutex_lock(&philo->philo_lock);
+		if (philo->meals_eaten == philo->meals_full)
+			return (pthread_mutex_unlock(&philo->philo_lock), NULL);
+		pthread_mutex_unlock(&philo->philo_lock);
 		if (sleeping(philo))
 			break ;
 		if (thinking(philo))

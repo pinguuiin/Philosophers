@@ -6,7 +6,7 @@
 /*   By: piyu <piyu@student.hive.fi>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 01:58:20 by piyu              #+#    #+#             */
-/*   Updated: 2025/08/09 00:01:43 by piyu             ###   ########.fr       */
+/*   Updated: 2025/08/12 04:34:24 by piyu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,22 +17,19 @@ int	conditional_clean_up(t_data *data, int p)
 	int	i;
 
 	i = 0;
-	free(data->philo);
-	if (p == -3)
-		return (EXIT_FAILURE);
-	free(data->fork_lock);
-	if (p == -2)
-		return (EXIT_FAILURE);
-	pthread_mutex_destroy(&data->start_lock);
-	if (p == -1)
-		return (EXIT_FAILURE);
-	pthread_mutex_destroy(&data->print_lock);
-	while (i < p)
+	if (p >= 0)
 	{
-		pthread_mutex_destroy(&data->fork_lock[i]);
-		pthread_mutex_destroy(&data->philo[i].dead_lock);
-		i++;
+		pthread_mutex_destroy(&data->print_lock);
+		while (i < p)
+		{
+			pthread_mutex_destroy(&data->fork_lock[i]);
+			pthread_mutex_destroy(&data->philo[i].philo_lock);
+			i++;
+		}
 	}
+	if (p >= -1)
+		free(data->fork_lock);
+	free(data->philo);
 	return (EXIT_FAILURE);
 }
 
@@ -50,17 +47,17 @@ void	allocate_fork(t_data *data)
 	}
 	data->philo[i].l_fork = &data->fork_lock[i];
 	data->philo[i].r_fork = &data->fork_lock[0];
-	i = 0;
-	while (i < data->num)
-	{
-		if (data->philo[i].id % 2 == 0)
-		{
-			temp = data->philo[i].l_fork;
-			data->philo[i].l_fork = data->philo[i].r_fork;
-			data->philo[i].r_fork = temp;
-		}
-		i++;
-	}
+	// i = 0;
+	// while (i < data->num)
+	// {
+	// 	if (data->philo[i].id % 2 == 0)
+	// 	{
+	// 		temp = data->philo[i].l_fork;
+	// 		data->philo[i].l_fork = data->philo[i].r_fork;
+	// 		data->philo[i].r_fork = temp;
+	// 	}
+	// 	i++;
+	// }
 }
 
 int	init_philo(t_data *data, int *arr, int i)
@@ -72,12 +69,11 @@ int	init_philo(t_data *data, int *arr, int i)
 	data->philo[i].meals_full = arr[4];
 	data->philo[i].meals_eaten = 0;
 	data->philo[i].is_dead = false;
-	data->philo[i].start_flag = &data->start_flag;
-	data->philo[i].start_lock = &data->start_lock;
+	data->philo[i].start_flag = false;
 	data->philo[i].print_lock = &data->print_lock;
 	if (pthread_mutex_init(&data->fork_lock[i], NULL))
 		return (conditional_clean_up(data, i));
-	if (pthread_mutex_init(&data->philo[i].dead_lock, NULL))
+	if (pthread_mutex_init(&data->philo[i].philo_lock, NULL))
 	{
 		pthread_mutex_destroy(&data->fork_lock[i]);
 		return (conditional_clean_up(data, i));
@@ -91,14 +87,11 @@ int	init_data(t_data *data, int *arr)
 
 	i = 0;
 	data->num = arr[0];
-	data->start_flag = false;
 	data->philo = malloc(data->num * sizeof(t_philo));
 	if (!data->philo)
 		return (EXIT_FAILURE);
 	data->fork_lock = malloc(data->num * sizeof(pthread_mutex_t));
 	if (!data->fork_lock)
-		return (conditional_clean_up(data, -3));
-	if (pthread_mutex_init(&data->start_lock, NULL))
 		return (conditional_clean_up(data, -2));
 	if (pthread_mutex_init(&data->print_lock, NULL))
 		return (conditional_clean_up(data, -1));

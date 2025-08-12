@@ -6,7 +6,7 @@
 /*   By: piyu <piyu@student.hive.fi>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 18:50:30 by piyu              #+#    #+#             */
-/*   Updated: 2025/08/09 04:12:07 by piyu             ###   ########.fr       */
+/*   Updated: 2025/08/12 04:18:18 by piyu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,26 +16,22 @@ int	join_and_clean_up(t_data *data, int n)
 {
 	int	i;
 
-	i = 0;
-	pthread_mutex_lock(&data->philo[0].dead_lock);
-	data->philo[0].is_dead = true;
-	pthread_mutex_unlock(&data->philo[0].dead_lock);
 	conditional_clean_up(data, data->num);
 	if (n == -1)
 		return (EXIT_FAILURE);
-	pthread_join(data->monitor, NULL);
+	kill_all(data, n);
 	while (i < n)
 		pthread_join(data->philo[i++].thread, NULL);
+	pthread_join(data->monitor, NULL);
 	return (EXIT_FAILURE);
 }
 
 static int	create_thread(t_data *data)
 {
 	int		i;
-	size_t	t;
+	time_t	t;
 
 	i = 0;
-	t = get_time();
 	if (pthread_create(&data->monitor, NULL, watching, (void *)data))
 		return (join_and_clean_up(data, -1));
 	while (i < data->num)
@@ -45,9 +41,7 @@ static int	create_thread(t_data *data)
 			return (join_and_clean_up(data, i));
 		i++;
 	}
-	pthread_mutex_lock(&data->start_lock);
-	data->start_flag = true;
-	pthread_mutex_unlock(&data->start_lock);
+	wake_up_all(data);
 	return (EXIT_SUCCESS);
 }
 

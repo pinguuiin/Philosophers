@@ -6,17 +6,15 @@
 /*   By: piyu <piyu@student.hive.fi>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 00:18:06 by piyu              #+#    #+#             */
-/*   Updated: 2025/08/09 04:58:51 by piyu             ###   ########.fr       */
+/*   Updated: 2025/08/12 05:48:39 by piyu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	starve_to_die(t_philo *philo)
+void	starve_to_die(t_data *data, t_philo *philo)
 {
-	pthread_mutex_lock(&philo->dead_lock);
-	philo->is_dead = true;
-	pthread_mutex_unlock(&philo->dead_lock);
+	kill_all(data, data->num);
 	pthread_mutex_lock(philo->print_lock);
 	printf("%zu %d %s\n", get_time() - philo->start_time,
 	philo->id, "died");
