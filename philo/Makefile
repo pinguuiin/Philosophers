@@ -8,20 +8,27 @@ RESET_COLOR=\033[0m
 
 NAME = philo
 CC = cc
-FLAGS = -Wall -Wextra -Werror -pthread
+FLAGS = -Wall -Wextra -Werror -g -O0 -pthread
 HEADER = -I.
-SRCS = main.c
+
+SRCS = main.c \
+		init.c \
+		monitor.c \
+		print_message.c \
+		routine.c \
+		time_manager.c \
+		utils.c
+
 OBJS = $(SRCS:.c=.o)
 
 all: $(NAME)
 
 %.o: %.c
 	$(CC) $(FLAGS) $(HEADER) -c $< -o $@
-	@echo "$(BGREEN)All files compiled.$(RESET_COLOR)"
 
 $(NAME): $(OBJS)
 	$(CC) $(FLAGS) $(OBJS) -o $(NAME)
-	@echo "$(BBLUE)All object files linked.$(RESET_COLOR)"
+	@echo "$(BBLUE)Compiled and linked.$(RESET_COLOR)"
 
 clean:
 	rm -f $(OBJS)

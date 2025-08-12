@@ -6,7 +6,7 @@
 /*   By: piyu <piyu@student.hive.fi>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 19:23:27 by piyu              #+#    #+#             */
-/*   Updated: 2025/08/12 05:50:30 by piyu             ###   ########.fr       */
+/*   Updated: 2025/08/12 22:24:54 by piyu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,17 +21,6 @@
 # include <pthread.h>
 # include <limits.h>
 # include <stdbool.h>
-
-typedef struct s_data
-{
-	int				num;
-	t_philo			*philo;
-	pthread_t		monitor;
-
-	pthread_mutex_t	*fork_lock;
-	pthread_mutex_t	print_lock;
-
-}	t_data;
 
 typedef struct s_philo
 {
@@ -55,6 +44,17 @@ typedef struct s_philo
 	pthread_mutex_t	*print_lock;
 
 }	t_philo;
+
+typedef struct s_data
+{
+	int				num;
+	t_philo			*philo;
+	pthread_t		monitor;
+
+	pthread_mutex_t	*fork_lock;
+	pthread_mutex_t	print_lock;
+
+}	t_data;
 
 int		philo_atoi(char *s);
 void	ft_putendl_fd(char *s, int fd);

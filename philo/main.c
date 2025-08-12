@@ -6,7 +6,7 @@
 /*   By: piyu <piyu@student.hive.fi>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 18:50:30 by piyu              #+#    #+#             */
-/*   Updated: 2025/08/12 04:18:18 by piyu             ###   ########.fr       */
+/*   Updated: 2025/08/12 22:25:39 by piyu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ int	join_and_clean_up(t_data *data, int n)
 {
 	int	i;
 
+	i = 0;
 	conditional_clean_up(data, data->num);
 	if (n == -1)
 		return (EXIT_FAILURE);
@@ -29,7 +30,6 @@ int	join_and_clean_up(t_data *data, int n)
 static int	create_thread(t_data *data)
 {
 	int		i;
-	time_t	t;
 
 	i = 0;
 	if (pthread_create(&data->monitor, NULL, watching, (void *)data))
@@ -67,6 +67,7 @@ static int	run_philo(t_data *data)
 		return (EXIT_FAILURE);
 	if (join_thread(data))
 		return (EXIT_FAILURE);
+	conditional_clean_up(data, data->num);
 	return (EXIT_SUCCESS);
 }
 

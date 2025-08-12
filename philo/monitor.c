@@ -6,7 +6,7 @@
 /*   By: piyu <piyu@student.hive.fi>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/12 22:07:13 by piyu              #+#    #+#             */
-/*   Updated: 2025/08/12 05:51:56 by piyu             ###   ########.fr       */
+/*   Updated: 2025/08/12 21:05:00 by piyu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,7 @@ void	*kill_all(t_data *data, int n)
 void	*watching(void *param)
 {
 	int		i;
+	int		philos_full;
 	t_data	*data;
 
 	data = (t_data *)param;
@@ -81,14 +82,24 @@ void	*watching(void *param)
 	while (1)
 	{
 		i = 0;
+		philos_full = 0;
 		while (i < data->num)
 		{
+			pthread_mutex_lock(&data->philo[i].philo_lock);
 			if (get_time() - data->philo[i].last_meal > data->philo[i].time_die)
-				return (starve_to_die(data, &data->philo[i]), NULL);
-
+			{
+				pthread_mutex_unlock(&data->philo[i].philo_lock);
+				starve_to_die(data, &data->philo[i]);
+				return (NULL);
+			}
+			if (data->philo[i].meals_eaten == data->philo[i].meals_full)
+				philos_full++;
+			pthread_mutex_unlock(&data->philo[i].philo_lock);
 			i++;
 		}
-		usleep(200);
+		if (philos_full == data->num)
+			return (NULL);
+		usleep(500);
 	}
 	return (NULL);
 }

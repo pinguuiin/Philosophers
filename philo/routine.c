@@ -6,7 +6,7 @@
 /*   By: piyu <piyu@student.hive.fi>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/12 02:13:40 by piyu              #+#    #+#             */
-/*   Updated: 2025/08/12 04:51:54 by piyu             ###   ########.fr       */
+/*   Updated: 2025/08/12 22:28:12 by piyu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,17 +14,18 @@
 
 static void	unlock_two_forks(t_philo *philo)
 {
-	pthread_mutex_unlock(philo->l_fork);
+	if (philo->l_fork != philo->r_fork)
+		pthread_mutex_unlock(philo->l_fork);
 	pthread_mutex_unlock(philo->r_fork);
 }
 
 static int	eating(t_philo *philo)
 {
 	pthread_mutex_lock(philo->l_fork);
-	if (print_messasge(philo, "has taken a fork"))
+	if (print_message(philo, "has taken a fork"))
 		return (pthread_mutex_unlock(philo->l_fork), EXIT_FAILURE);
 	pthread_mutex_lock(philo->r_fork);
-	if (print_messasge(philo, "has taken a fork"))
+	if (print_message(philo, "has taken a fork"))
 		return (unlock_two_forks(philo), EXIT_FAILURE);
 	if (print_message(philo, "is eating"))
 		return (unlock_two_forks(philo), EXIT_FAILURE);
