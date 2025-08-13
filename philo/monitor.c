@@ -6,7 +6,7 @@
 /*   By: piyu <piyu@student.hive.fi>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/12 22:07:13 by piyu              #+#    #+#             */
-/*   Updated: 2025/08/13 04:39:31 by piyu             ###   ########.fr       */
+/*   Updated: 2025/08/13 05:06:28 by piyu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,12 @@ bool	dead_check(t_philo *philo)
 int	hunger_level_check(t_data *data, t_philo *philo, int *philos_full)
 {
 	pthread_mutex_lock(&philo->philo_lock);
+	if (philo->meals_eaten == philo->meals_full)
+	{
+		(*philos_full)++;
+		pthread_mutex_unlock(&philo->philo_lock);
+		return (EXIT_SUCCESS);
+	}
 	if (get_time() - philo->last_meal > philo->time_die)
 	{
 		pthread_mutex_unlock(&philo->philo_lock);
@@ -75,8 +81,6 @@ int	hunger_level_check(t_data *data, t_philo *philo, int *philos_full)
 		pthread_mutex_unlock(philo->print_lock);
 		return (EXIT_FAILURE);
 	}
-	if (philo->meals_eaten == philo->meals_full)
-		(*philos_full)++;
 	pthread_mutex_unlock(&philo->philo_lock);
 	return (EXIT_SUCCESS);
 }

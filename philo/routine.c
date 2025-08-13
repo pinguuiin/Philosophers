@@ -6,7 +6,7 @@
 /*   By: piyu <piyu@student.hive.fi>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/12 02:13:40 by piyu              #+#    #+#             */
-/*   Updated: 2025/08/13 04:02:26 by piyu             ###   ########.fr       */
+/*   Updated: 2025/08/13 05:16:51 by piyu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,7 @@ static int	sleeping_and_thinking(t_philo *philo)
 		return (EXIT_FAILURE);
 	if (print_message(philo, "is thinking"))
 		return (EXIT_FAILURE);
+	usleep(50);
 	return (EXIT_SUCCESS);
 }
 
