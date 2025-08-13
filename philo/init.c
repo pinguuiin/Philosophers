@@ -6,7 +6,7 @@
 /*   By: piyu <piyu@student.hive.fi>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 01:58:20 by piyu              #+#    #+#             */
-/*   Updated: 2025/08/13 01:06:07 by piyu             ###   ########.fr       */
+/*   Updated: 2025/08/14 00:20:22 by piyu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int	conditional_clean_up(t_data *data, int p)
 void	allocate_fork(t_data *data)
 {
 	int				i;
-	pthread_mutex_t	*temp;
+	// pthread_mutex_t	*temp;
 
 	i = 0;
 	while (i < data->num - 1)
@@ -47,17 +47,17 @@ void	allocate_fork(t_data *data)
 	}
 	data->philo[i].l_fork = &data->fork_lock[i];
 	data->philo[i].r_fork = &data->fork_lock[0];
-	i = 0;
-	while (i < data->num)
-	{
-		if (data->philo[i].id % 2 == 0)
-		{
-			temp = data->philo[i].l_fork;
-			data->philo[i].l_fork = data->philo[i].r_fork;
-			data->philo[i].r_fork = temp;
-		}
-		i++;
-	}
+	// i = 0;
+	// while (i < data->num)
+	// {
+	// 	if (data->philo[i].id % 2 == 0)
+	// 	{
+	// 		temp = data->philo[i].l_fork;
+	// 		data->philo[i].l_fork = data->philo[i].r_fork;
+	// 		data->philo[i].r_fork = temp;
+	// 	}
+	// 	i++;
+	// }
 }
 
 int	init_philo(t_data *data, int *arr, int i)
