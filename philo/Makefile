@@ -14,7 +14,6 @@ HEADER = -I.
 SRCS = main.c \
 		init.c \
 		monitor.c \
-		print_message.c \
 		routine.c \
 		time_manager.c \
 		utils.c

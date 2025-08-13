@@ -6,11 +6,21 @@
 /*   By: piyu <piyu@student.hive.fi>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 00:13:31 by piyu              #+#    #+#             */
-/*   Updated: 2025/08/12 22:29:42 by piyu             ###   ########.fr       */
+/*   Updated: 2025/08/13 04:07:58 by piyu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+int	print_message(t_philo *philo, char *s)
+{
+	if (dead_check(philo) == true)
+		return (EXIT_FAILURE);
+	pthread_mutex_lock(philo->print_lock);
+	printf("%zu %d %s\n", get_time() - philo->start_time, philo->id, s);
+	pthread_mutex_unlock(philo->print_lock);
+	return (EXIT_SUCCESS);
+}
 
 int	philo_atoi(char *s)
 {
