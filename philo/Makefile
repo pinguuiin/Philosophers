@@ -20,6 +20,8 @@ SRCS = main.c \
 
 OBJS = $(SRCS:.c=.o)
 
+.SECONDARY: $(OBJS)
+
 all: $(NAME)
 
 %.o: %.c

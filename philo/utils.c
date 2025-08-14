@@ -6,7 +6,7 @@
 /*   By: piyu <piyu@student.hive.fi>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 00:13:31 by piyu              #+#    #+#             */
-/*   Updated: 2025/08/14 22:45:03 by piyu             ###   ########.fr       */
+/*   Updated: 2025/08/15 00:29:27 by piyu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,18 +48,13 @@ int	philo_atoi(char *s)
 	return ((int)n);
 }
 
-void	ft_putendl_fd(char *s, int fd)
+int	error_return(char *s)
 {
 	int	i;
 
 	i = 0;
 	while (s[i])
-		write(fd, &s[i++], 1);
-	write(fd, "\n", 1);
-}
-
-int	error_return(char *s)
-{
-	ft_putendl_fd(s, STDERR_FILENO);
+		write(STDERR_FILENO, &s[i++], 1);
+	write(STDERR_FILENO, "\n", 1);
 	return (EXIT_FAILURE);
 }

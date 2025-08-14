@@ -6,7 +6,7 @@
 /*   By: piyu <piyu@student.hive.fi>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 19:23:27 by piyu              #+#    #+#             */
-/*   Updated: 2025/08/14 21:00:01 by piyu             ###   ########.fr       */
+/*   Updated: 2025/08/15 00:33:44 by piyu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,19 +57,22 @@ typedef struct s_data
 
 }	t_data;
 
-int		philo_atoi(char *s);
-void	ft_putendl_fd(char *s, int fd);
-int		error_return(char *s);
-time_t	get_time(void);
 int		conditional_clean_up(t_data *data, int p);
 int		init_data(t_data *data, int *arr);
-int		print_message(t_philo *philo, char *s);
-int		wait_for_ready(t_philo *philo);
-void	*routine(void *param);
-bool	dead_check(t_philo *philo);
+
 void	wake_up_all(t_data *data);
 void	*kill_all(t_data *data, int n);
+bool	dead_check(t_philo *philo);
 void	*watching(void *param);
-int		hunger_level_check(t_data *data, t_philo *philo, int *philos_full);
+
+void	*routine(void *param);
+
+time_t	get_time(void);
 int		time_counter(t_philo *philo, time_t ms);
+int		wait_for_ready(t_philo *philo);
+
+int		print_message(t_philo *philo, char *s);
+int		philo_atoi(char *s);
+int		error_return(char *s);
+
 #endif

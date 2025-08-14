@@ -6,13 +6,13 @@
 /*   By: piyu <piyu@student.hive.fi>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 18:50:30 by piyu              #+#    #+#             */
-/*   Updated: 2025/08/12 22:25:39 by piyu             ###   ########.fr       */
+/*   Updated: 2025/08/15 00:18:38 by piyu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	join_and_clean_up(t_data *data, int n)
+static inline int	join_and_clean_up(t_data *data, int n)
 {
 	int	i;
 
@@ -27,9 +27,9 @@ int	join_and_clean_up(t_data *data, int n)
 	return (EXIT_FAILURE);
 }
 
-static int	create_thread(t_data *data)
+static inline int	create_thread(t_data *data)
 {
-	int		i;
+	int	i;
 
 	i = 0;
 	if (pthread_create(&data->monitor, NULL, watching, (void *)data))
@@ -37,7 +37,7 @@ static int	create_thread(t_data *data)
 	while (i < data->num)
 	{
 		if (pthread_create(&data->philo[i].thread, NULL, routine,
-		(void *)&data->philo[i]))
+				(void *)&data->philo[i]))
 			return (join_and_clean_up(data, i));
 		i++;
 	}
@@ -45,7 +45,7 @@ static int	create_thread(t_data *data)
 	return (EXIT_SUCCESS);
 }
 
-static int	join_thread(t_data *data)
+static inline int	join_thread(t_data *data)
 {
 	int	i;
 
@@ -61,7 +61,7 @@ static int	join_thread(t_data *data)
 	return (EXIT_SUCCESS);
 }
 
-static int	run_philo(t_data *data)
+static inline int	run_philo(t_data *data)
 {
 	if (create_thread(data))
 		return (EXIT_FAILURE);
@@ -73,9 +73,9 @@ static int	run_philo(t_data *data)
 
 int	main(int argc, char **argv)
 {
-	int				i;
-	int				arr[5];
-	t_data			data;
+	int		i;
+	int		arr[5];
+	t_data	data;
 
 	i = 0;
 	if (argc != 5 && argc != 6)
