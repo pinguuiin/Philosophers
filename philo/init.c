@@ -6,7 +6,7 @@
 /*   By: piyu <piyu@student.hive.fi>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 01:58:20 by piyu              #+#    #+#             */
-/*   Updated: 2025/08/14 00:20:22 by piyu             ###   ########.fr       */
+/*   Updated: 2025/08/14 21:02:36 by piyu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ void	allocate_fork(t_data *data)
 int	init_philo(t_data *data, int *arr, int i)
 {
 	data->philo[i].id = i + 1;
+	data->philo[i].num_philos = arr[0];
 	data->philo[i].time_die = arr[1];
 	data->philo[i].time_eat = arr[2];
 	data->philo[i].time_sleep = arr[3];

@@ -6,7 +6,7 @@
 /*   By: piyu <piyu@student.hive.fi>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 19:23:27 by piyu              #+#    #+#             */
-/*   Updated: 2025/08/14 00:27:34 by piyu             ###   ########.fr       */
+/*   Updated: 2025/08/14 21:00:01 by piyu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ typedef struct s_philo
 	int				id;
 	pthread_t		thread;
 
+	int				num_philos;
 	int				time_die;
 	int				time_eat;
 	int				time_sleep;

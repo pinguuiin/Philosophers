@@ -6,7 +6,7 @@
 /*   By: piyu <piyu@student.hive.fi>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/12 22:07:13 by piyu              #+#    #+#             */
-/*   Updated: 2025/08/14 00:51:31 by piyu             ###   ########.fr       */
+/*   Updated: 2025/08/14 20:20:08 by piyu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ int	hunger_level_check(t_data *data, t_philo *philo, int *philos_full)
 		pthread_mutex_lock(philo->print_lock);
 		printf("%zu %d %s\n", get_time() - philo->start_time,
 		philo->id, "died");
-		usleep(5000);
+		usleep(3000);
 		pthread_mutex_unlock(philo->print_lock);
 		return (EXIT_FAILURE);
 	}
