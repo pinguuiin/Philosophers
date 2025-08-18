@@ -6,7 +6,7 @@
 /*   By: piyu <piyu@student.hive.fi>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/12 02:13:40 by piyu              #+#    #+#             */
-/*   Updated: 2025/08/15 00:22:20 by piyu             ###   ########.fr       */
+/*   Updated: 2025/08/18 18:09:45 by piyu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ static inline int	sleeping_and_thinking(t_philo *philo)
 		pthread_mutex_lock(&philo->philo_lock);
 		if (philo->last_meal != philo->start_time && get_time()
 			- philo->last_meal + philo->time_eat < philo->time_die)
-			usleep(1500);
+			usleep(1000);
 		pthread_mutex_unlock(&philo->philo_lock);
 	}
 	return (EXIT_SUCCESS);

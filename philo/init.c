@@ -6,7 +6,7 @@
 /*   By: piyu <piyu@student.hive.fi>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 01:58:20 by piyu              #+#    #+#             */
-/*   Updated: 2025/08/15 00:15:49 by piyu             ###   ########.fr       */
+/*   Updated: 2025/08/18 19:16:42 by piyu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,14 +38,20 @@ static inline void	allocate_fork(t_data *data)
 	int	i;
 
 	i = 0;
-	while (i < data->num - 1)
+	while (i < data->num)
 	{
-		data->philo[i].l_fork = &data->fork_lock[i];
-		data->philo[i].r_fork = &data->fork_lock[i + 1];
+		if (data->philo[i].id % 2 != 0)
+		{
+			data->philo[i].l_fork = &data->fork_lock[i];
+			data->philo[i].r_fork = &data->fork_lock[(i + 1) % data->num];
+		}
+		else
+		{
+			data->philo[i].l_fork = &data->fork_lock[(i + 1) % data->num];
+			data->philo[i].r_fork = &data->fork_lock[i];
+		}
 		i++;
 	}
-	data->philo[i].l_fork = &data->fork_lock[i];
-	data->philo[i].r_fork = &data->fork_lock[0];
 }
 
 static inline int	init_philo(t_data *data, int *arr, int i)
