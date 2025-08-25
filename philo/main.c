@@ -6,7 +6,7 @@
 /*   By: piyu <piyu@student.hive.fi>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 18:50:30 by piyu              #+#    #+#             */
-/*   Updated: 2025/08/15 00:18:38 by piyu             ###   ########.fr       */
+/*   Updated: 2025/08/25 00:56:39 by piyu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,13 @@ static inline int	join_and_clean_up(t_data *data, int n)
 	int	i;
 
 	i = 0;
-	conditional_clean_up(data, data->num);
 	if (n == -1)
-		return (EXIT_FAILURE);
+		return (conditional_clean_up(data, data->num), EXIT_FAILURE);
 	kill_all(data, n);
 	while (i < n)
 		pthread_join(data->philo[i++].thread, NULL);
 	pthread_join(data->monitor, NULL);
+	conditional_clean_up(data, data->num);
 	return (EXIT_FAILURE);
 }
 

@@ -6,7 +6,7 @@
 /*   By: piyu <piyu@student.hive.fi>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/12 02:13:40 by piyu              #+#    #+#             */
-/*   Updated: 2025/08/18 18:09:45 by piyu             ###   ########.fr       */
+/*   Updated: 2025/08/25 21:17:54 by piyu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,14 +49,16 @@ static inline int	sleeping_and_thinking(t_philo *philo)
 		return (EXIT_FAILURE);
 	if (print_message(philo, "is thinking"))
 		return (EXIT_FAILURE);
-	if (philo->num_philos % 2 != 0)
+	pthread_mutex_lock(&philo->philo_lock);
+	if (get_time() - philo->last_meal + philo->time_eat < philo->time_die
+		&& philo->time_eat >= philo->time_sleep)
 	{
-		pthread_mutex_lock(&philo->philo_lock);
-		if (philo->last_meal != philo->start_time && get_time()
-			- philo->last_meal + philo->time_eat < philo->time_die)
-			usleep(1000);
 		pthread_mutex_unlock(&philo->philo_lock);
+		if (time_counter(philo, philo->time_eat - philo->time_sleep + 1))
+			return (EXIT_FAILURE);
+		pthread_mutex_lock(&philo->philo_lock);
 	}
+	pthread_mutex_unlock(&philo->philo_lock);
 	return (EXIT_SUCCESS);
 }
 
@@ -78,8 +80,13 @@ void	*routine(void *param)
 		return (NULL);
 	if (philo->l_fork == philo->r_fork)
 		return (run_one_philo(philo));
-	if (philo->id % 2 != 0 && sleeping_and_thinking(philo))
-		return (NULL);
+	if (philo->id % 2 != 0)
+	{
+		if (print_message(philo, "is thinking"))
+			return (NULL);
+		if (time_counter(philo, 3))
+			return (NULL);
+	}
 	while (1)
 	{
 		if (eating(philo))
